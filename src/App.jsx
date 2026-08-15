@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Search from "./components/search";
 import Spinner from "./components/spinner";
 import MovieCard from "./components/MovieCard";
+import { useDebounce } from "react-use"
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
@@ -27,6 +28,15 @@ const App = () => {
   const [movieList, setMovieList] = useState([])
 
   const [isLoading, setIsLoading] = useState(false) // State to track loading status
+
+  // State to hold the debounced search term for API requests
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+  // Debounce the search term to avoid making API requests on every keystroke
+  // by waiting for 500 milliseconds after the user stops typing
+  useDebounce(() => {
+    setDebouncedSearchTerm(searchTerm)
+  }, 500, [searchTerm])
 
   const fetchMovies = async (query = '') => {
     setIsLoading(true); // Set loading state to true before starting the fetch
@@ -64,8 +74,8 @@ const App = () => {
 
   // To fetch data from the API
   useEffect(() => {
-    fetchMovies(searchTerm)
-  }, [searchTerm]) // Fetch movies whenever the search term changes
+    fetchMovies(debouncedSearchTerm);
+  }, [debouncedSearchTerm]) // Fetch movies whenever the debounced search term changes
 
   return (
     <main>
