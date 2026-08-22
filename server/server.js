@@ -1,14 +1,15 @@
 import "dotenv/config"; // Load environment variables from .env file
 import express from "express";
 import mongoose from "mongoose";
+import searchRouter from "./routes/search.js";
 
 const app = express();
 
+// Middleware to parse incoming JSON requests
 app.use(express.json());
 
-app.get("/", async (req, res) => {
-    res.json({ message: "Backend is working!" });
-})
+// Use the searchRouter for handling search-related routes
+app.use("/api/search", searchRouter);
 
 // Connect to MongoDB
 mongoose
