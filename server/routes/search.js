@@ -31,4 +31,19 @@ router.post("/", async (req, res) => {
     }
 })
 
+// Get route to fetch the top 5 trending movies based on search count
+router.get("/trending", async (req, res) => {
+    try {
+        // Fetch the top 5 trending movies based on the count of searches
+        const trendingMovies = await Search.find()
+            .sort({count: -1}) // Sort by count in descending order
+            .limit(5) // Limit to the top 5 trending movies
+        
+        res.json(trendingMovies)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to fetch trending movies" });
+    }
+})
+
 export default router;
