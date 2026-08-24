@@ -2,8 +2,12 @@ import "dotenv/config"; // Load environment variables from .env file
 import express from "express";
 import mongoose from "mongoose";
 import searchRouter from "./routes/search.js";
+import cors from "cors";
 
 const app = express();
+
+// Enable CORS for all routes to allow cross-origin requests
+app.use(cors());
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());

@@ -4,15 +4,14 @@ const searchSchema = new mongoose.Schema({
     searchTerm: {
         type: String,
         required: true,
-        unique: true,
     },
     movieId: {
         type: Number,
         required: true,
+        unique: true
     },
-    posterUrl: {
+    posterUrl: { // some cases poster url could be missing so not adding required
         type: String,
-        required: true,
     },
     count: {
         type: Number,

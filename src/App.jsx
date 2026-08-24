@@ -6,10 +6,13 @@ import { useDebounce } from "react-use"
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
-const API_BASE_URL = "https://api.themoviedb.org/3"
+const TMDB_API_BASE_URL = "https://api.themoviedb.org/3"
+
+// Backend API base URL for recording search terms and fetching trending movies
+const BACKEND_API_BASE_URL = "http://localhost:5000/api/search"
 
 // API_OPTIONS: Configuration object for the API request
-const API_OPTIONS = {
+const TMDB_API_OPTIONS = {
   method: 'GET',
   headers: {
     accept: 'application/json', // Accept header to specify the expected response format
@@ -43,11 +46,11 @@ const App = () => {
     setErrorMessage(''); // Clear any previous error messages
     try {
       const endpoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+        ? `${TMDB_API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${TMDB_API_BASE_URL}/discover/movie?sort_by=popularity.desc`
 
       // Fetch data from the API using the endpoint and options
-      const response = await fetch(endpoint, API_OPTIONS);
+      const response = await fetch(endpoint, TMDB_API_OPTIONS);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch movies. Please try again later.`);
@@ -61,6 +64,36 @@ const App = () => {
         return;
       }
       
+      // If a search query is provided
+      // send a POST request to the backend to record the search term
+      if (query) {
+        const movie = data.results[0]
+
+        const BACKEND_POST_API_OPTIONS = {
+          method: 'POST',
+          headers: {
+            // Set the content type to JSON for the POST request
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            searchTerm: query,
+            movieId: movie.id,
+            posterUrl: movie.poster_path
+          })
+        }
+      
+      // Making a POST request to the backend and checking if the response is successful
+      const backendResponse = await fetch(
+        BACKEND_API_BASE_URL,
+        BACKEND_POST_API_OPTIONS
+      );
+
+      if (!backendResponse.ok) {
+        throw new Error("Failed to record movie search");
+      }
+      }
+      
+
       setErrorMessage(''); // Clear any previous error messages
       setMovieList(data.results); // Update the movie list state with the fetched data
 

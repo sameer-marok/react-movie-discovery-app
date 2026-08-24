@@ -7,8 +7,8 @@ router.post("/", async (req, res) => {
     try {
         const { searchTerm, movieId, posterUrl } = req.body;
 
-        // Check if the search term already exists in the database
-        const existingSearch = await Search.findOne({ searchTerm });
+        // Check if the movie already exists in the database
+        const existingSearch = await Search.findOne({ movieId });
 
         if (existingSearch) {
             // If it exists, increment the count
