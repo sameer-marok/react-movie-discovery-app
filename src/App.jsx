@@ -30,6 +30,9 @@ const App = () => {
   // state to hold the fetched movies data
   const [movieList, setMovieList] = useState([])
 
+  // state to hold trending movies data
+  const [trendingMovies, setTrendingMovies] = useState([])
+
   const [isLoading, setIsLoading] = useState(false) // State to track loading status
 
   // State to hold the debounced search term for API requests
@@ -82,18 +85,17 @@ const App = () => {
           })
         }
       
-      // Making a POST request to the backend and checking if the response is successful
-      const backendResponse = await fetch(
-        BACKEND_API_BASE_URL,
-        BACKEND_POST_API_OPTIONS
-      );
+        // Making a POST request to the backend and checking if the response is successful
+        const backendResponse = await fetch(
+          BACKEND_API_BASE_URL,
+          BACKEND_POST_API_OPTIONS
+        );
 
-      if (!backendResponse.ok) {
-        throw new Error("Failed to record movie search");
-      }
+        if (!backendResponse.ok) {
+          throw new Error("Failed to record movie search");
+        }
       }
       
-
       setErrorMessage(''); // Clear any previous error messages
       setMovieList(data.results); // Update the movie list state with the fetched data
 
@@ -104,6 +106,43 @@ const App = () => {
         setIsLoading(false); // Set loading state to false after the fetch is complete
     }
   }
+
+  const fetchTrendingMovies = async () => {
+
+    try {
+      const BACKEND_GET_API_OPTIONS = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json', // Accept header to specify the expected response format
+        }
+      };
+
+      const endpoint = BACKEND_API_BASE_URL + "/trending"
+
+      const response = await fetch(endpoint, BACKEND_GET_API_OPTIONS);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch trending movies. Please try again later.`);
+      }
+
+      const data = await response.json();
+
+      if (!data || data.length === 0) {
+        setTrendingMovies([]); // Clear the movie list if no results are found
+        return;
+      }
+
+      setTrendingMovies(data)
+      
+    } catch (error) {
+      console.error('Error fetching trending movies:', error);
+    }
+
+  }
+
+  useEffect(() => {
+    fetchTrendingMovies()
+  }, []) // Only need to fetch once when component initially mounts
 
   // To fetch data from the API
   useEffect(() => {
