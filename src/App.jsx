@@ -163,8 +163,28 @@ const App = () => {
             <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
         </header>
 
+        {trendingMovies.length > 0 && (
+          <section className="trending">
+            <h2>Trending Movies</h2>
+
+            <ul>
+              {trendingMovies.map((movie, index) => {
+                return (
+                  // React needs unique key for each item in list
+                  <li key={movie.movieId}> {/* movieId comes from our Mongoose schema */}
+                    <p>{index + 1}</p> {/* number to display */}
+                    <img src={movie.posterUrl ? `https://image.tmdb.org/t/p/w500/${movie.posterUrl}` : 
+                    '/no-movie.png'}/>
+                  </li>
+                )
+              })}
+            </ul>
+
+          </section>
+        )}
+
         <section className="all-movies">
-          <h2 className="mt-10">All Movies</h2>
+          <h2>All Movies</h2>
 
           {isLoading ? (
             <Spinner/>
