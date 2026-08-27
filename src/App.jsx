@@ -8,8 +8,9 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 const TMDB_API_BASE_URL = "https://api.themoviedb.org/3"
 
-// Backend API base URL for recording search terms and fetching trending movies
-const BACKEND_API_BASE_URL = "http://localhost:5000/api/search"
+// Backend API base URL is set in the .env file and accessed using import.meta.env
+// for production, it will be uploaded to Netlify
+const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 // API_OPTIONS: Configuration object for the API request
 const TMDB_API_OPTIONS = {
