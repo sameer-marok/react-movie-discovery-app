@@ -6,6 +6,10 @@ import cors from "cors";
 
 const app = express();
 
+// Render provides the port through an environment variable
+// If not provided, it defaults to 5000 for local development
+const PORT = process.env.PORT || 5000;
+
 // Enable CORS for all routes to allow cross-origin requests
 app.use(cors());
 
@@ -22,8 +26,8 @@ mongoose
   .then(() => {
     console.log("MongoDB connected");
 
-    app.listen(5000, () => {
-      console.log("Server running on http://localhost:5000");
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
