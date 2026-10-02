@@ -6,7 +6,7 @@ Search for movies, browse popular titles, and discover trending movies based on 
 
 ## 🚀 Live Demo
 
-https://react-movie-discovery-app.netlify.app/
+https://react-movie-discovery.netlify.app/
 
 ## ✨ Features
 
